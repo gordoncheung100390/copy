@@ -106,7 +106,23 @@
             display: block;
         }
 
-        /* Diagram Thumbnail Styling */
+        /* Group Teleport Thumbnail Styling */
+        .gt-thumbnail {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            border: 1px solid #444;
+            margin-bottom: 20px;
+            display: block;
+            opacity: 0.8;
+            transition: 0.3s;
+        }
+        .card:hover .gt-thumbnail {
+            opacity: 1;
+            border-color: var(--accent);
+        }
+
+        /* Diagram Thumbnail Styling (Used for Nu-Mileage) */
         .diagram-preview {
             width: 100%;
             height: auto;
@@ -154,6 +170,9 @@
                 <span class="tag">Available Now - Alpha Version</span>
                 <h3>Group Teleport</h3>
                 <p>Collaborative virtual exploration. Sync locations, chat in real-time, and explore the world with your team from any device.</p>
+                
+                <img src="group-teleport-thumbnail.png" alt="Tour guide leading tourists" class="gt-thumbnail">
+                
                 <a href="group-teleport.html" class="btn" style="padding: 10px 20px; font-size: 0.8rem;">Launch App</a>
             </div>
 
@@ -178,6 +197,7 @@
             </div>
         </div>
     </section>
+
     <footer>
         &copy; 2026 NUVENTRATECH. ALL RIGHTS RESERVED. <br>
         BUILT FOR THE NEXT GENERATION OF SMALL BUSINESS.
