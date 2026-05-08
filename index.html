@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NuventraTech | Simple. Powerful. Affordable.</title>
+    <style>
+        :root {
+            --bg: #000000;
+            --text: #ffffff;
+            --accent: #00d2ff;
+            --gray: #1c1c1c;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background-color: var(--bg); 
+            color: var(--text); 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 10%;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -1px; }
+        .logo span { color: var(--accent); }
+        .nav-links a { color: #888; text-decoration: none; margin-left: 30px; font-size: 0.9rem; transition: 0.3s; }
+        .nav-links a:hover { color: #fff; }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 20px;
+            background: radial-gradient(circle at center, #111 0%, #000 100%);
+        }
+
+        h1 { font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; line-height: 1; margin-bottom: 20px; }
+        .hero p { font-size: 1.2rem; color: #888; max-width: 600px; margin-bottom: 40px; }
+
+        .btn {
+            padding: 15px 40px;
+            border: 1px solid #fff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+        .btn:hover { background: #fff; color: #000; }
+
+        /* Products Section */
+        .section { padding: 100px 10%; }
+        h2 { font-size: 2.5rem; margin-bottom: 50px; text-align: center; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--gray);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid #333;
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover { border-color: var(--accent); transform: translateY(-10px); }
+        .card h3 { font-size: 1.8rem; margin-bottom: 15px; }
+        .card p { color: #aaa; margin-bottom: 30px; }
+        
+        .tag {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        /* Footer */
+        footer { padding: 50px 10%; border-top: 1px solid #222; text-align: center; color: #444; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">NUVENTRA<span>TECH</span></div>
+        <div class="nav-links">
+            <a href="#vision">Vision</a>
+            <a href="#products">Products</a>
+            <a href="mailto:hello@nuventratech.com">Contact</a>
+        </div>
+    </nav>
+
+    <section class="hero" id="vision">
+        <p class="tag">The Vision</p>
+        <h1>ENTERPRISE POWER.<br>HOME BUDGETS.</h1>
+        <p>Custom-built software solutions designed for small businesses and households. High-tech shouldn't mean high cost.</p>
+        <a href="#products" class="btn">Explore Solutions</a>
+    </section>
+
+    <section class="section" id="products">
+        <p class="tag" style="text-align: center;">Our Ecosystem</p>
+        <h2>Current Solutions</h2>
+        
+        <div class="grid">
+            <div class="card">
+                <span class="tag">Available Now</span>
+                <h3>Group Teleport</h3>
+                <p>Collaborative virtual exploration. Sync locations, chat in real-time, and explore the world with your team from any device.</p>
+                <a href="group-teleport.html" class="btn" style="padding: 10px 20px; font-size: 0.8rem;">Launch App</a>
+            </div>
+
+            <div class="card">
+                <span class="tag">Coming Soon</span>
+                <h3>Nu-Mileage</h3>
+                <p>Automatic mileage logging with an integrated 1-click invoicing system. Perfect for freelancers and small delivery fleets.</p>
+                <a href="#" class="btn" style="padding: 10px 20px; font-size: 0.8rem; opacity: 0.5; cursor: not-allowed;">Waitlist</a>
+            </div>
+
+            <div class="card">
+                <span class="tag">Service</span>
+                <h3>Custom Dev</h3>
+                <p>Need a specific tool for your household or shop? We build lightweight, efficient apps tailored exactly to your workflow.</p>
+                <a href="mailto:hello@nuventratech.com" class="btn" style="padding: 10px 20px; font-size: 0.8rem;">Inquire</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2026 NUVENTRATECH. ALL RIGHTS RESERVED. <br>
+        BUILT FOR THE NEXT GENERATION OF SMALL BUSINESS.
+    </footer>
+
+</body>
+</html>
