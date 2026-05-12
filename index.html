@@ -63,12 +63,15 @@
         .btn {
             padding: 15px 40px;
             border: 1px solid #fff;
+            background: transparent;
             color: #fff;
             text-decoration: none;
             border-radius: 5px;
             font-weight: 600;
             transition: 0.3s;
             display: inline-block;
+            cursor: pointer;
+            font-family: inherit;
         }
         .btn:hover { background: #fff; color: #000; }
 
@@ -137,6 +140,68 @@
             filter: brightness(1.2);
         }
 
+        /* --- SECURITY MODAL STYLING --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .security-box {
+            background: #111;
+            border: 1px solid var(--accent);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 0 30px rgba(0, 210, 255, 0.2);
+            position: relative;
+        }
+
+        .security-box h3 {
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+        }
+
+        .security-box input {
+            width: 100%;
+            padding: 12px;
+            background: #222;
+            border: 1px solid #444;
+            color: #fff;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+        }
+
+        .security-box input:focus {
+            border-color: var(--accent);
+        }
+
+        .error-msg {
+            color: #ff4d4d;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 20px;
+            color: #888;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        .close-modal:hover { color: #fff; }
+
         /* Footer */
         footer { padding: 50px 10%; border-top: 1px solid #222; text-align: center; color: #444; font-size: 0.8rem; }
     </style>
@@ -173,11 +238,11 @@
                 
                 <img src="group-teleport-thumbnail.png" alt="Tour guide leading tourists" class="gt-thumbnail">
 
-                <a href="group-teleport.html" class="btn" style="padding: 10px 20px; font-size: 0.8rem;">Launch App</a>
+                <a href="group-teleport.html" class="btn" style="padding: 10px 20px; font-size: 0.8rem; text-align: center;">Launch App</a>
             </div>
 
             <div class="card">
-                <span class="tag">Coming Soon - V6.0 Logic</span>
+                <span class="tag">Private Access - V6.0 Logic</span>
                 <h3>Nu-Mileage</h3>
 
                 <p>Automatic mileage logging with an integrated 1-click invoicing system. Perfect for freelancers and small delivery fleets.</p>
@@ -186,14 +251,14 @@
                     <img src="nu-mileage-workflow.png" alt="Nu-Mileage Logic Diagram" class="diagram-preview">
                 </a>
                 
-                <a href="nu-mileage-workflow.png" target="_blank" class="btn" style="padding: 10px 20px; font-size: 0.8rem;">View Detailed Workflow</a>
+                <button onclick="openSecurityLock()" class="btn" style="padding: 10px 20px; font-size: 0.8rem; width: 100%;">Access Now!</button>
             </div>
 
             <div class="card">
                 <span class="tag">Service</span>
                 <h3>Custom Dev</h3>
                 <p>Need a specific tool for your household or shop? We build lightweight, efficient apps tailored exactly to your workflow.</p>
-                <a href="mailto:hello@nuventratech.com" class="btn" style="padding: 10px 20px; font-size: 0.8rem;">Inquire</a>
+                <a href="mailto:hello@nuventratech.com" class="btn" style="padding: 10px 20px; font-size: 0.8rem; text-align: center;">Inquire</a>
             </div>
         </div>
     </section>
@@ -202,6 +267,44 @@
         &copy; 2026 NUVENTRATECH. ALL RIGHTS RESERVED. <br>
         BUILT FOR THE NEXT GENERATION OF SMALL BUSINESS.
     </footer>
+
+    <div class="modal-overlay" id="securityOverlay">
+        <div class="security-box" id="githubLock">
+            <span class="close-modal" onclick="closeSecurityLock()">✕</span>
+            <h3 style="color: var(--accent);">🔑 Authentication Required</h3>
+            <p style="font-size: 0.9rem; color: #aaa; margin-bottom: 20px;">Enter your access token to launch Nu-Mileage V6.0.</p>
+            
+            <p class="error-msg" id="tokenError">Access Denied: Invalid Token.</p>
+            
+            <input type="text" id="tokenInput" placeholder="Token Code">
+            <button onclick="checkToken()" class="btn" style="width: 100%;">Unlock SaaS</button>
+        </div>
+    </div>
+
+    <script>
+        function openSecurityLock() {
+            document.getElementById('securityOverlay').style.display = 'flex';
+            // Reset fields when opened
+            document.getElementById('tokenInput').value = '';
+            document.getElementById('tokenError').style.display = 'none';
+        }
+
+        function closeSecurityLock() {
+            document.getElementById('securityOverlay').style.display = 'none';
+        }
+
+        function checkToken() {
+            const token = document.getElementById('tokenInput').value.trim();
+            
+            // Hardcoded token validation
+            if (token === "MP-2026-SECURE") {
+                // IMPORTANT: Replace the URL below with your actual Google Script Web App URL
+                window.location.href = "https://script.google.com/macros/s/AKfycbw4n177rIAg0OJ3p7RB7bxHiYqBghRammfN56LTCsuGcPBK1EES9P0gvDlIWj3C8Jc/exec";
+            } else {
+                document.getElementById('tokenError').style.display = 'block';
+            }
+        }
+    </script>
 
 </body>
 </html>
