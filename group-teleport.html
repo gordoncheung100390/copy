@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GROUP TELEPORT | OMNISYNC 6.6</title>
     
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDU1wim3d3MYf-vvYS4JiCcnW278IaWrVs&libraries=places"></script>
+    <script>
+      (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Re-trying:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+        key: "AIzaSyDU1wim3d3MYf-vvYS4JiCcnW278IaWrVs",
+        v: "weekly"
+      });
+    </script>
     
     <script crossorigin src="https://unpkg.com/@daily-co/daily-js"></script>
     
@@ -14,17 +19,21 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body, html { margin: 0; padding: 0; height: 100dvh; width: 100vw; background: var(--bg); color: white; font-family: sans-serif; overflow: hidden; }
 
+        /* GATEKEEPER / LOGIN SCREEN */
         #gatekeeper { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .gate-card { background: var(--panel); padding: 30px; border-radius: 20px; text-align: center; border: 1px solid #333; width: 100%; max-width: 350px; }
         input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 12px; border: 1px solid #444; background: #000; color: #fff; font-size: 16px; outline: none; }
 
+        /* MAIN APP LAYOUT */
         #app-shell { display: none; height: 100dvh; width: 100vw; flex-direction: column; }
         #view-3d { height: 50%; background: #111; position: relative; overflow: hidden; min-height: 10%; }
         #view-2d { flex: 1; background: var(--panel); min-height: 10%; position: relative; }
 
+        /* DRAGGABLE DIVIDER */
         #resizer { height: 12px; width: 100%; background: #222; cursor: ns-resize; display: flex; align-items: center; justify-content: center; z-index: 2000; border-top: 1px solid #333; border-bottom: 1px solid #000; touch-action: none; }
         #resizer::after { content: ''; width: 40px; height: 4px; background: #555; border-radius: 2px; }
 
+        /* DESKTOP SIDE-BY-SIDE VIEW */
         @media (min-width: 768px) {
             #app-shell { flex-direction: row; }
             #view-3d { width: 50%; height: 100% !important; min-width: 10%; }
@@ -32,18 +41,21 @@
             #resizer::after { width: 4px; height: 40px; }
         }
 
+        /* CHAT SYSTEM */
         #chat-outer { position: absolute; bottom: 60px; left: 10px; width: 260px; height: 220px; background: rgba(0,0,0,0.6); border-radius: 10px; display: flex; flex-direction: column; border: 1px solid rgba(255,255,255,0.1); z-index: 1200; backdrop-filter: blur(5px); }
         #chat-messages { flex: 1; overflow-y: auto; padding: 8px; font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
         .msg b { color: var(--accent); }
-        
         #chat-input-row { display: flex; border-top: 1px solid rgba(255,255,255,0.1); padding: 5px; gap: 5px; }
         #chat-input-row input { flex: 1; background: rgba(0,0,0,0.3); border: 1px solid #444; padding: 8px; color: white; font-size: 13px; margin: 0; border-radius: 8px; }
         #chat-send-btn { background: var(--accent); color: #000; border: none; padding: 0 12px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 11px; height: 35px; }
         
+        /* USER LIST / PRESENCE */
         #presence-roster { position: absolute; top: 200px; left: 10px; background: rgba(0,0,0,0.8); padding: 10px; border-radius: 8px; font-size: 11px; z-index: 1100; border: 1px solid rgba(255,255,255,0.1); pointer-events: none; }
 
+        /* VIDEO CALL BOX */
         #video-container { position: absolute; top: 10px; left: 10px; width: 280px; height: 180px; background: #000; border-radius: 12px; border: 2px solid var(--accent); overflow: hidden; z-index: 1000; }
 
+        /* SEARCH & BUTTONS */
         #search-container { position: absolute; top: 10px; right: 10px; width: 180px; z-index: 1001; display: none; }
         #pac-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--accent); background: #000; color: #fff; font-size: 14px; }
         .controls { position: absolute; bottom: 15px; right: 15px; z-index: 1000; }
@@ -56,7 +68,7 @@
     <div id="gatekeeper">
         <div class="gate-card">
             <h2>Group Teleport <span style="color:var(--accent)">6.6</span></h2>
-            <input type="text" id="room-input" placeholder="Room Code">
+            <input type="text" id="room-input" placeholder="Room Code (e.g. PARIS)">
             <input type="text" id="username-input" placeholder="Your Name">
             <div style="display:flex; gap:10px; margin: 15px 0;">
                 <button id="btn-t" onclick="App.setRole('tourist')" style="flex:1">TOURIST</button>
@@ -68,7 +80,11 @@
 
     <div id="app-shell">
         <div id="view-3d">
-            <div id="presence-roster"><div style="color:var(--accent); font-weight:bold; margin-bottom:5px;">ONLINE</div><div id="user-list-render"></div></div>
+            <div id="presence-roster">
+                <div style="color:var(--accent); font-weight:bold; margin-bottom:5px;">ONLINE</div>
+                <div id="user-list-render"></div>
+            </div>
+            
             <div id="chat-outer">
                 <div id="chat-messages"></div>
                 <div id="chat-input-row">
@@ -79,9 +95,15 @@
             
             <div id="video-container"></div>
             
-            <div id="search-container"><input id="pac-input" type="text" placeholder="Search Location..."></div>
-            <div class="controls" id="tourist-controls" style="display:none;"><button id="tether-btn" onclick="App.brain.toggleTether()">Tethered</button></div>
+            <div id="search-container">
+                <input id="pac-input" type="text" placeholder="Search Location...">
+            </div>
+
+            <div class="controls" id="tourist-controls" style="display:none;">
+                <button id="tether-btn" onclick="App.brain.toggleTether()">Tethered</button>
+            </div>
         </div>
+
         <div id="resizer"></div>
         <div id="view-2d"></div>
     </div>
@@ -92,14 +114,23 @@
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 
         const App = {
-            state: { role: 'tourist', room: 'LOBBY', name: 'User', id: "U"+Date.now(), isTethered: true, isSyncing: false },
+            state: { 
+                role: 'tourist', 
+                room: 'LOBBY', 
+                name: 'User', 
+                id: "U"+Date.now(), 
+                isTethered: true, 
+                isSyncing: false 
+            },
             
+            // FUNCTION: Role Switching
             setRole: function(r) {
                 this.state.role = r;
                 document.getElementById('btn-t').style = r==='tourist' ? "background:#fff" : "background:#222;color:#888";
                 document.getElementById('btn-g').style = r==='guide' ? "background:#fff" : "background:#222;color:#888";
             },
 
+            // FUNCTION: Launch Engine
             launch: async function() {
                 this.state.name = document.getElementById('username-input').value || "User";
                 this.state.room = document.getElementById('room-input').value.toUpperCase() || "LOBBY";
@@ -120,8 +151,9 @@
                     document.getElementById('gatekeeper').style.display = 'none';
                     document.getElementById('app-shell').style.display = 'flex';
 
+                    // Start all sub-systems
                     App.postOffice.init(); 
-                    App.eyes.init(); 
+                    await App.eyes.init(); 
                     await App.studio.init(); 
                     App.ui.initResizer();
 
@@ -132,19 +164,21 @@
                         document.getElementById('tourist-controls').style.display = 'block'; 
                     }
                 } catch (err) {
-                    console.error(err);
-                    alert("Launch Failed: " + err.message);
+                    console.error("Launch Error:", err);
+                    alert("Launch Failed: See console.");
                     launchBtn.innerText = "LAUNCH TOUR";
                     launchBtn.disabled = false;
                 }
             },
 
+            // FUNCTION: Tethering & Chat Logic
             brain: {
                 toggleTether: function() {
                     App.state.isTethered = !App.state.isTethered;
                     const btn = document.getElementById('tether-btn');
                     btn.innerText = App.state.isTethered ? "Tethered" : "Roaming";
                     btn.className = App.state.isTethered ? "" : "active";
+                    
                     if(App.state.isTethered) {
                         onValue(ref(App.postOffice.db, "rooms/"+App.state.room+"/guide"), s => { 
                             if(s.val()) App.postOffice.applyMove(s.val()); 
@@ -166,6 +200,7 @@
 
         window.App = App;
 
+        // UI: Resizing Divider Logic
         App.ui = {
             initResizer: function() {
                 const resizer = document.getElementById('resizer'), v3d = document.getElementById('view-3d');
@@ -173,9 +208,13 @@
                 const move = (e) => {
                     if (!dragging) return;
                     const y = e.touches ? e.touches[0].clientY : e.clientY, x = e.touches ? e.touches[0].clientX : e.clientX;
-                    if (window.innerWidth >= 768) { let v = (x / window.innerWidth) * 100; if(v > 10 && v < 90) v3d.style.width = v + '%'; }
-                    else { let v = (y / window.innerHeight) * 100; if(v > 10 && v < 90) v3d.style.height = v + '%'; }
-                    if(App.eyes.map) google.maps.event.trigger(App.eyes.map, 'resize');
+                    if (window.innerWidth >= 768) { 
+                        let v = (x / window.innerWidth) * 100; 
+                        if(v > 10 && v < 90) v3d.style.width = v + '%'; 
+                    } else { 
+                        let v = (y / window.innerHeight) * 100; 
+                        if(v > 10 && v < 90) v3d.style.height = v + '%'; 
+                    }
                 };
                 resizer.addEventListener('mousedown', () => dragging = true);
                 resizer.addEventListener('touchstart', () => dragging = true);
@@ -186,32 +225,30 @@
             }
         };
 
+        // EYES: Google Maps & Street View Logic
         App.eyes = {
             map: null, panorama: null, markers: {},
-            init: function() {
+            init: async function() {
+                const { Map } = await google.maps.importLibrary("maps");
+                const { StreetViewPanorama, StreetViewService } = await google.maps.importLibrary("streetView");
+                const { Autocomplete } = await google.maps.importLibrary("places");
+
                 const center = { lat: 44.4268, lng: 26.1025 };
-                this.map = new google.maps.Map(document.getElementById('view-2d'), { 
-                    center, zoom: 17, streetViewControl: true, zoomControl: true, panControl: true, mapTypeControl: false, fullscreenControl: false
-                });
-                this.panorama = new google.maps.StreetViewPanorama(document.getElementById('view-3d'), { 
-                    position: center, visible: true, disableDefaultUI: true 
-                });
+                this.map = new Map(document.getElementById('view-2d'), { center, zoom: 17 });
+                this.panorama = new StreetViewPanorama(document.getElementById('view-3d'), { position: center, visible: true, disableDefaultUI: true });
                 this.map.setStreetView(this.panorama);
 
                 if(App.state.role === 'guide') {
-                    const search = new google.maps.places.Autocomplete(document.getElementById("pac-input"));
-                    const svService = new google.maps.StreetViewService();
+                    const search = new Autocomplete(document.getElementById("pac-input"));
+                    const svService = new StreetViewService();
                     search.addListener("place_changed", () => {
                         const p = search.getPlace();
                         if(!p.geometry) return;
-                        const loc = p.geometry.location;
-                        svService.getPanorama({ location: loc, radius: 50 }, (data, status) => {
+                        svService.getPanorama({ location: p.geometry.location, radius: 50 }, (data, status) => {
                             if (status === "OK") {
                                 const svPos = data.location.latLng;
                                 this.panorama.setPosition(svPos);
-                                this.map.setCenter(svPos);
-                                const v = this.panorama.getPov();
-                                App.postOffice.transmit({ lat: svPos.lat(), lng: svPos.lng(), h: v.heading, p: v.pitch });
+                                App.postOffice.transmit({ lat: svPos.lat(), lng: svPos.lng(), h: this.panorama.getPov().heading, p: this.panorama.getPov().pitch });
                             }
                         });
                     });
@@ -220,7 +257,6 @@
                 const report = () => {
                     const p = this.panorama.getPosition(), v = this.panorama.getPov();
                     if(!p || App.state.isSyncing) return;
-                    this.map.setCenter(p);
                     update(ref(App.postOffice.db, "rooms/"+App.state.room+"/users/"+App.state.id), { 
                         lat: p.lat(), lng: p.lng(), name: App.state.name, role: App.state.role 
                     });
@@ -231,30 +267,32 @@
             }
         };
 
+        // POSTOFFICE: Data Syncing Logic
         App.postOffice = {
             db: null,
             init: function() {
                 onDisconnect(ref(this.db, "rooms/"+App.state.room+"/users/"+App.state.id)).remove();
+                
                 onChildAdded(ref(this.db, "rooms/"+App.state.room+"/chats"), s => {
                     const m = s.val(), box = document.getElementById('chat-messages');
                     box.innerHTML += `<div class="msg"><b>${m.sender}:</b> ${m.text}</div>`;
                     box.scrollTop = box.scrollHeight;
                 });
+
                 if(App.state.role === 'tourist') {
                     onValue(ref(this.db, "rooms/"+App.state.room+"/guide"), s => { 
                         if(s.val() && App.state.isTethered) this.applyMove(s.val()); 
                     });
                 }
+                
                 onValue(ref(this.db, "rooms/"+App.state.room+"/users"), s => this.renderUsers(s.val() || {}));
             },
             clearChat: function() { remove(ref(this.db, "rooms/"+App.state.room+"/chats")); },
             transmit: function(d) { set(ref(this.db, "rooms/"+App.state.room+"/guide"), d); },
             applyMove: function(d) {
                 App.state.isSyncing = true;
-                const loc = {lat: d.lat, lng: d.lng};
-                App.eyes.panorama.setPosition(loc);
-                App.eyes.panorama.setPov({heading: d.h, pitch: d.p});
-                App.eyes.map.setCenter(loc);
+                this.panorama.setPosition({lat: d.lat, lng: d.lng});
+                this.panorama.setPov({heading: d.h, pitch: d.p});
                 setTimeout(() => App.state.isSyncing = false, 300);
             },
             renderUsers: function(users) {
@@ -265,19 +303,15 @@
                     html += `<div>${u.role==='guide'?'👑':'👤'} ${u.name}</div>`;
                     if(uid === App.state.id || !u.lat) return;
                     if(!App.eyes.markers[uid]) {
-                        App.eyes.markers[uid] = new google.maps.Marker({
-                            map: App.eyes.map,
-                            label: { text: u.name, color: "black", fontSize: "14px", fontWeight: "bold" },
-                            icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: u.role === 'guide' ? "#ff3333" : "#00d2ff", fillOpacity: 1, strokeWeight: 2, strokeColor: "#fff", labelOrigin: new google.maps.Point(0, -2) }
-                        });
+                        App.eyes.markers[uid] = new google.maps.Marker({ map: App.eyes.map, label: u.name });
                     }
                     App.eyes.markers[uid].setPosition({lat: u.lat, lng: u.lng});
                 });
                 list.innerHTML = html;
-                Object.keys(App.eyes.markers).forEach(mid => { if(!users[mid]) { App.eyes.markers[mid].setMap(null); delete App.eyes.markers[mid]; } });
             }
         };
 
+        // STUDIO: Video Call Initialization
         App.studio = {
             callFrame: null,
             init: async function() {
@@ -290,9 +324,13 @@
 
                 const createDailyRoom = httpsCallable(App.functions, 'createDailyRoom');
                 const result = await createDailyRoom({ roomName: App.state.room });
-                const roomUrl = result.data.url;
+                
+                if(result.data.error) { 
+                    console.error("Room creation error:", result.data.error); 
+                    return; 
+                }
 
-                const joinOptions = { url: roomUrl, userName: App.state.name };
+                const joinOptions = { url: result.data.url, userName: App.state.name };
                 if (App.state.role === 'tourist') {
                     joinOptions.audioSource = false;
                     joinOptions.videoSource = false;
