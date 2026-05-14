@@ -88,7 +88,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getDatabase, ref, onValue, set, push, onDisconnect, update, remove, serverValue, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+        import { getDatabase, ref, onValue, set, push, onDisconnect, update, remove, serverTimestamp, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
         import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-functions.js";
 
         const App = {
@@ -132,6 +132,7 @@
                         document.getElementById('tourist-controls').style.display = 'block'; 
                     }
                 } catch (err) {
+                    console.error(err);
                     alert("Launch Failed: " + err.message);
                     launchBtn.innerText = "LAUNCH TOUR";
                     launchBtn.disabled = false;
@@ -156,7 +157,7 @@
                     push(ref(App.postOffice.db, "rooms/"+App.state.room+"/chats"), { 
                         sender: App.state.name, 
                         text: field.value, 
-                        time: serverValue.TIMESTAMP 
+                        time: serverTimestamp() 
                     });
                     field.value = "";
                 }
