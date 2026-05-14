@@ -101,6 +101,26 @@
             launch: function() {
                 this.state.name = document.getElementById('username-input').value || "User";
                 this.state.room = document.getElementById('room-input').value.toUpperCase() || "LOBBY";
+                
+                // Initialize Firebase early to check room status
+                const config = { databaseURL: "https://virtual-tour-platform-492518-default-rtdb.firebaseio.com" };
+                if (!firebase.apps.length) firebase.initializeApp(config);
+                const db = firebase.database();
+
+                if (this.state.role === 'guide') {
+                    // Check if someone in this specific room is already a guide
+                    db.ref("rooms/" + this.state.room + "/users").orderByChild("role").equalTo("guide").once("value", (snapshot) => {
+                        if (snapshot.exists()) {
+                            alert("A tour guide already exists in this room! Please join as a Tourist or use a different Room Code.");
+                        } else {
+                            this.proceedLaunch();
+                        }
+                    });
+                } else {
+                    this.proceedLaunch();
+                }
+            },
+            proceedLaunch: function() {
                 document.getElementById('gatekeeper').style.display = 'none';
                 document.getElementById('app-shell').style.display = 'flex';
                 App.postOffice.init(); App.eyes.init(); App.studio.init(); App.ui.initResizer();
