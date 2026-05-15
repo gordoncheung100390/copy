@@ -3,7 +3,7 @@ name: Agentic Deploy & Self-Heal
 on:
   push:
     branches:
-      - main  # Wakes the agent up every time you save a change
+      - main
 
 jobs:
   deploy_and_test:
@@ -15,22 +15,25 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22  # Upgraded to Node 22 to fix that deprecation warning!
 
       - name: Install Firebase Tools
         run: npm install -g firebase-tools
 
-      # PHASE 1: THE HANDS (Authenticate & Deploy to Firebase)
+      # NEW STEP: Fixes the missing package error by installing dependencies first
+      - name: Install Backend Dependencies
+        run: |
+          cd functions
+          npm install
+
       - name: Authenticate Service Account
         run: |
           echo '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}' > service-account.json
           echo "GOOGLE_APPLICATION_CREDENTIALS=${{ github.workspace }}/service-account.json" >> $GITHUB_ENV
 
-      # Adjust your project ID below if it's different from virtual-tour-platform-492518
       - name: Deploy Backend Functions
         run: firebase deploy --only functions --project=virtual-tour-platform-492518
 
-      # PHASE 2: THE EYES (We will fill this in next!)
       - name: Run Smoke Test on Daily.co Bridge
         run: |
           echo "Testing if the Firebase Function is responsive..."
