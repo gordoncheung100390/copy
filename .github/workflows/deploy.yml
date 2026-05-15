@@ -75,7 +75,7 @@ jobs:
           echo "🤖 Agent probing live Firebase function..."
           
           # 1. Ping the live URL and capture the HTTP response code and body
-          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST https://createidailyroom-633276632463.ue.a.run.app)
+          RESPONSE=$(curl -s -w "\n%{http_code}" -X POST https://createdailyroom-54vwgyfqga-uc.a.run.app)
           
           HTTP_BODY=$(echo "$RESPONSE" | sed '$d')
           HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
