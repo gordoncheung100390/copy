@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+# THIS SILENCES THE GITHUB WARNING
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   deploy_and_test:
     runs-on: ubuntu-latest
@@ -33,7 +37,6 @@ jobs:
       - name: Deploy Backend Functions
         run: firebase deploy --only functions --project=virtual-tour-platform-492518
 
-      # PHASE 2: THE EYES (Clean & properly aligned)
       - name: Run Smoke Test on Daily.co Bridge
         run: |
           echo "🤖 Agent probing live Firebase function..."
