@@ -197,9 +197,19 @@
                                 const v = this.panorama.getPov();
                                 App.postOffice.transmit({ lat: svPos.lat(), lng: svPos.lng(), h: v.heading, p: v.pitch });
                             } else {
+                                // 1. Lock synchronization to ignore phantom mobile events
+                                App.state.isSyncing = true;
+                                
                                 this.map.setCenter(loc);
                                 this.map.setZoom(14);
+                                
+                                // 2. The alert will pause execution here
                                 alert("No direct Street View found at this exact spot! Please drag the yellow Pegman onto the 2D map to find a nearby street.");
+                                
+                                // 3. Wait 600ms after they click OK before allowing updates again
+                                setTimeout(() => {
+                                    App.state.isSyncing = false;
+                                }, 600);
                             }
                         });
                     });
