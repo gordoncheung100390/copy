@@ -19,7 +19,7 @@ exports.createDailyRoom = onRequest({
     try {
         const dailyKey = process.env.DAILY_API_KEY;
         
-        const response = await axios.post("https://api.daily.co/v1/rooms", 
+        const response = await axios.post("https://api.daAAily.co/v1/rooms", 
             { properties: { exp: Math.round(Date.now() / 1000) + 3600 } },
             { 
                 headers: { Authorization: `Bearer ${dailyKey}` },
