@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GROUP TELEPORT | OMNISYNC 6.6</title>
     
-    <!-- FIREBASE & GOOGLE MAPS -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDU1wim3d3MYf-vvYS4JiCcnW278IaWrVs&libraries=places"></script>
     
-    <!-- DAILY.CO OFFICIAL API -->
     <script crossorigin src="https://unpkg.com/@daily-co/daily-js"></script>
     
     <style>
@@ -197,6 +195,11 @@
                                 this.map.setCenter(svPos);
                                 const v = this.panorama.getPov();
                                 App.postOffice.transmit({ lat: svPos.lat(), lng: svPos.lng(), h: v.heading, p: v.pitch });
+                            } else {
+                                // NO STREET VIEW FOUND: Move the 2D map there anyway and show the alert
+                                this.map.setCenter(loc);
+                                this.map.setZoom(14); // Zoom out slightly to give them a wider view of the town
+                                alert("No direct Street View found at this exact spot! Please drag the yellow Pegman onto the 2D map to find a nearby street.");
                             }
                         });
                     });
