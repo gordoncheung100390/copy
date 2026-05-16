@@ -79,7 +79,7 @@ jobs:
           with open("functions/index.js", "r") as f:
               current_code = f.read()
 
-          error_context = f"Status: {os.environ.get(\"STATUS\")}\nBody: {os.environ.get(\"BODY\")}"
+          error_context = f"Status: {os.environ.get('STATUS')}\nBody: {os.environ.get('BODY')}"
 
           prompt = f"""
           You are an automated self-healing engineering agent.
