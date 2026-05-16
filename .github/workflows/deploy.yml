@@ -1,4 +1,4 @@
-name: Agentic Deploy & Self-Heal
+name: Agentic Deploy & Self-Heal V2
 
 on:
   push:
