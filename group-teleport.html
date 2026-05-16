@@ -90,7 +90,7 @@
 
     <script>
         const App = {
-            state: { role: 'tourist', room: 'LOBBY', name: 'User', id: "U"+Date.now(), isTethered: true, isSyncing: false, userDraggingMap: false },
+            state: { role: 'tourist', room: 'LOBBY', name: 'User', id: "U"+Date.now(), isTethered: true, isSyncing: false, userDraggingMap: false, searchFailed: false },
             setRole: function(r) {
                 this.state.role = r;
                 document.getElementById('btn-t').style = r==='tourist' ? "background:#fff" : "background:#222;color:#888";
@@ -168,7 +168,7 @@
         };
 
         App.eyes = {
-            map: null, panorama: null, markers: {},
+            map: null, panorama: null, markers: {}, lastSvPos: null,
             init: function() {
                 const center = { lat: 44.4268, lng: 26.1025 };
                 this.map = new google.maps.Map(document.getElementById('view-2d'), { 
@@ -179,10 +179,8 @@
                 });
                 this.map.setStreetView(this.panorama);
 
-                // Detect when the user touches/drags the 2D map directly to stop snapping it
                 this.map.addListener('dragstart', () => { App.state.userDraggingMap = true; });
                 this.map.addListener('dragend', () => { 
-                    // Give a small delay after letting go before allowing streetview tracking to center it again
                     setTimeout(() => { App.state.userDraggingMap = false; }, 1500); 
                 });
 
@@ -195,24 +193,26 @@
                         const loc = p.geometry.location;
                         svService.getPanorama({ location: loc, radius: 50 }, (data, status) => {
                             if (status === "OK") {
+                                App.state.searchFailed = false;
                                 const svPos = data.location.latLng;
                                 this.panorama.setPosition(svPos);
                                 this.map.setCenter(svPos);
                                 const v = this.panorama.getPov();
                                 App.postOffice.transmit({ lat: svPos.lat(), lng: svPos.lng(), h: v.heading, p: v.pitch });
                             } else {
-                                // Block standard synchronization reports completely during the exception routine
-                                App.state.isSyncing = true;
+                                // Cache current panorama position right before the jump
+                                const currentP = this.panorama.getPosition();
+                                if (currentP) {
+                                    this.lastSvPos = { lat: currentP.lat(), lng: currentP.lng() };
+                                }
+                                
+                                // Flag search failure state
+                                App.state.searchFailed = true;
                                 
                                 this.map.setCenter(loc);
                                 this.map.setZoom(14);
                                 
                                 alert("No direct Street View found at this exact spot! Please drag the yellow Pegman onto the 2D map to find a nearby street.");
-                                
-                                // Clean layout reset timeout to let layouts breathe
-                                setTimeout(() => {
-                                    App.state.isSyncing = false;
-                                }, 1000);
                             }
                         });
                     });
@@ -222,13 +222,28 @@
                     const p = this.panorama.getPosition(), v = this.panorama.getPov();
                     if(!p || App.state.isSyncing) return;
                     
-                    // Only center the map to pegman automatically if the user isn't physically panning the map layout
+                    // Break snapping loop if search failed and pegman hasn't been moved yet
+                    if (App.state.searchFailed && this.lastSvPos) {
+                        const isSamePos = (p.lat().toFixed(5) === this.lastSvPos.lat.toFixed(5) && 
+                                           p.lng().toFixed(5) === this.lastSvPos.lng.toFixed(5));
+                        if (isSamePos) {
+                            // Only update perspective parameters, don't drag 2D frame alignment backwards
+                            if(App.state.role === 'guide') App.postOffice.transmit({ lat: p.lat(), lng: p.lng(), h: v.heading, p: v.pitch });
+                            return;
+                        } else {
+                            // Pegman dropped somewhere completely new! Release lock layout state
+                            App.state.searchFailed = false;
+                        }
+                    }
+                    
                     if (!App.state.userDraggingMap) {
                         this.map.setCenter(p);
                     }
                     
                     App.postOffice.db.ref("rooms/"+App.state.room+"/users/"+App.state.id).update({ lat: p.lat(), lng: p.lng(), name: App.state.name, role: App.state.role });
                     if(App.state.role === 'guide') App.postOffice.transmit({ lat: p.lat(), lng: p.lng(), h: v.heading, p: v.pitch });
+                    
+                    this.lastSvPos = { lat: p.lat(), lng: p.lng() };
                 };
                 this.panorama.addListener('position_changed', report);
                 this.panorama.addListener('pov_changed', report);
@@ -259,7 +274,7 @@
                 const loc = {lat: d.lat, lng: d.lng};
                 App.eyes.panorama.setPosition(loc);
                 App.eyes.panorama.setPov({heading: d.h, pitch: d.p});
-                if (!App.state.userDraggingMap) {
+                if (!App.state.userDraggingMap && !App.state.searchFailed) {
                     App.eyes.map.setCenter(loc);
                 }
                 setTimeout(() => App.state.isSyncing = false, 300);
